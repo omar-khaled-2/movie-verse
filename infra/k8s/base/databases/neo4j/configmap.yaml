@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: neo4j
+  namespace: movie-verse
+data:
+  user: neo4j
+  NEO4J_server_config_strict__validation_enabled: "false"

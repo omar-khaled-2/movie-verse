@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  neo4j
+  namespace: movie-verse
+  labels:
+    app:  neo4j
+spec:
+  selector:
+    matchLabels:
+      app: neo4j
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app:  neo4j
+    spec:
+      containers:
+      - name:  neo4j
+        image:  neo4j:latest
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2Gi
+          limits:
+            cpu: 500m
+            memory: 4Gi
+        envFrom:
+          - configMapRef:
+              name: neo4j
+        env:
+          - name: user
+            valueFrom:
+              configMapKeyRef:
+                key: user
+                name: neo4j
+
+          - name: password
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: neo4j-pass
+          - name: NEO4J_AUTH
+            value: "${user}/${password}"
+          - name: volume
+            value: /var/lib/neo4j/data
+        
+        ports:
+        - containerPort:  7687
+          name:  neo4j
+        - containerPort: 7474
+          name: neo4j-dashboard
+        
+        volumeMounts:
+        - name: storage
+          mountPath: 	/var/lib/neo4j/data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: neo4j-data

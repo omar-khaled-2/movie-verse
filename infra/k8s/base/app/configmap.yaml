@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: app
+  namespace: movie-verse
+data:
+  NEO4J_URI: neo4j://neo4j:7687

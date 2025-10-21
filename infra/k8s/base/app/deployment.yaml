@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  app
+  namespace: movie-verse
+  labels:
+    app:  app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  replicas: 10
+  template:
+    metadata:
+      labels:
+        app:  app
+    spec:
+      containers:
+      - name:  app
+        image:  alsetouhy/movie-verse:latest
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        envFrom:
+          - configMapRef:
+              name: app
+
+        env:
+          - name: NEO4J_USER
+            valueFrom:
+              configMapKeyRef:
+                key: user
+                name: neo4j
+
+          - name: NEO4J_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: neo4j-pass
+        ports:
+        - containerPort:  3000
+          name:  app
