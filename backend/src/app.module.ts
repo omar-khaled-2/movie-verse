@@ -8,6 +8,7 @@ import { ActorModule } from './actor/actor.module';
 import { DirectorModule } from './director/director.module';
 import { GenreModule } from './genre/genre.module';
 import { AwardModule } from './award/award.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { AwardModule } from './award/award.module';
     GenreModule,
     AwardModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
