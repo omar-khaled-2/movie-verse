@@ -1,98 +1,488 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Movie-Verse Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+GraphQL API built with NestJS and Neo4j for managing movie data with complex relationships.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Overview
 
-## Description
+This is the backend service for Movie-Verse, providing a GraphQL API for movie data management. It uses Neo4j graph database for efficient relationship queries and is built with NestJS for modularity and scalability.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🛠 Tech Stack
 
-## Project setup
+- **Framework**: NestJS 11.x
+- **Language**: TypeScript 5.x
+- **API**: GraphQL (Apollo Server 5.x)
+- **Database**: Neo4j 6.x
+- **Runtime**: Node.js 20
+- **Package Manager**: npm/pnpm
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 20+
+- Neo4j database instance
+- npm or pnpm
+
+### Installation
 
 ```bash
-$ pnpm install
+# Install dependencies
+npm install
+# or
+pnpm install
 ```
 
-## Compile and run the project
+### Environment Configuration
+
+Create a `.env` file in the backend directory:
+
+```env
+# Application
+PORT=3000
+NODE_ENV=development
+
+# Neo4j Database
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your-password
+```
+
+### Running the Application
 
 ```bash
-# development
-$ pnpm run start
+# Development mode with hot-reload
+npm run start:dev
 
-# watch mode
-$ pnpm run start:dev
+# Production mode
+npm run build
+npm run start:prod
 
-# production mode
-$ pnpm run start:prod
+# Debug mode
+npm run start:debug
 ```
 
-## Run tests
+The API will be available at:
+- GraphQL Playground: `http://localhost:3000/graphql`
+- API Endpoint: `http://localhost:3000`
+
+## 📁 Project Structure
+
+```
+backend/
+├── src/
+│   ├── actor/              # Actor module
+│   │   ├── actor.model.ts      # Actor GraphQL model
+│   │   ├── actor.resolver.ts   # GraphQL resolver
+│   │   ├── actor.service.ts    # Business logic
+│   │   └── actor.module.ts     # Module definition
+│   │
+│   ├── award/              # Award module
+│   │   ├── award.model.ts
+│   │   ├── award.resolver.ts
+│   │   ├── award.service.ts
+│   │   └── award.module.ts
+│   │
+│   ├── director/           # Director module
+│   │   ├── director.model.ts
+│   │   ├── director.resolver.ts
+│   │   ├── director.service.ts
+│   │   └── director.module.ts
+│   │
+│   ├── genre/              # Genre module
+│   │   ├── genre.model.ts
+│   │   ├── genre.resolver.ts
+│   │   ├── genre.service.ts
+│   │   └── genre.module.ts
+│   │
+│   ├── movie/              # Movie module
+│   │   ├── movie.model.ts      # Movie GraphQL models
+│   │   ├── movie.resolver.ts   # GraphQL resolver
+│   │   ├── movies.service.ts   # Business logic
+│   │   └── movie.module.ts     # Module definition
+│   │
+│   ├── neo4j/              # Neo4j integration
+│   │   ├── neo4j.service.ts    # Neo4j service
+│   │   └── neo4j.module.ts     # Neo4j module
+│   │
+│   ├── schemas.ts          # Shared GraphQL schemas
+│   ├── app.controller.ts   # REST controller (health check)
+│   ├── app.module.ts       # Root module
+│   └── main.ts             # Application entry point
+│
+├── dist/                   # Compiled output
+├── node_modules/           # Dependencies
+├── test/                   # E2E tests
+├── .dockerignore          # Docker ignore rules
+├── .env                    # Environment variables
+├── .prettierrc            # Prettier configuration
+├── Dockerfile             # Container definition
+├── eslint.config.mjs      # ESLint configuration
+├── nest-cli.json          # NestJS CLI config
+├── package.json           # Dependencies and scripts
+├── tsconfig.json          # TypeScript config
+└── tsconfig.build.json    # Build TypeScript config
+```
+
+## 📚 API Modules
+
+### Movie Module
+
+Handles movie CRUD operations and advanced features:
+
+**Queries:**
+- `movies(input?: GetMoviesInput)` - Get movies with optional filtering
+- `movie(id: String!)` - Get a single movie by ID
+- `similarMovies(movieId: String!)` - Find similar movies
+- `recommendMovies(movieId: String!)` - Get movie recommendations
+
+**Mutations:**
+- `createMovie(input: CreateMovieInput!)` - Create a new movie
+
+**Types:**
+```graphql
+type Movie {
+  id: String!
+  title: String!
+  released: Int!
+  rating: Float!
+  budget: Float!
+  boxOffice: Float!
+  description: String!
+  genres: [String!]!
+  director: String
+  actors: [String!]!
+  awards: [String!]!
+}
+```
+
+### Actor Module
+
+Manages actor information and relationships:
+
+**Queries:**
+- `actors` - Get all actors
+- `actor(id: String!)` - Get a single actor
+
+**Types:**
+```graphql
+type Actor {
+  id: String!
+  name: String!
+  movies: [Movie!]!
+}
+```
+
+### Director Module
+
+Handles director management:
+
+**Queries:**
+- `directors` - Get all directors
+- `director(id: String!)` - Get a single director
+
+**Types:**
+```graphql
+type Director {
+  id: String!
+  name: String!
+  movies: [Movie!]!
+}
+```
+
+### Genre Module
+
+Manages movie genres:
+
+**Queries:**
+- `genres` - Get all genres
+- `genre(name: String!)` - Get a genre
+
+**Types:**
+```graphql
+type Genre {
+  name: String!
+  movies: [Movie!]!
+}
+```
+
+### Award Module
+
+Tracks movie awards:
+
+**Queries:**
+- `awards` - Get all awards
+- `award(id: String!)` - Get an award
+
+**Types:**
+```graphql
+type Award {
+  id: String!
+  name: String!
+  movie: Movie
+}
+```
+
+## 🔍 GraphQL Examples
+
+### Get Movies with Filtering
+
+```graphql
+# Get movies by director
+query {
+  movies(input: { directorId: "christopher-nolan" }) {
+    id
+    title
+    released
+    rating
+    genres
+  }
+}
+
+# Get movies by actor
+query {
+  movies(input: { actorId: "leonardo-dicaprio" }) {
+    id
+    title
+    rating
+  }
+}
+```
+
+### Find Similar Movies
+
+```graphql
+query {
+  similarMovies(movieId: "inception") {
+    id
+    title
+    sharedGenres
+    sharedDirector
+  }
+}
+```
+
+### Get Movie Recommendations
+
+```graphql
+query {
+  recommendMovies(movieId: "the-matrix") {
+    id
+    title
+    similarityScore
+  }
+}
+```
+
+### Create a Movie
+
+```graphql
+mutation {
+  createMovie(input: {
+    title: "Interstellar"
+    released: 2014
+    rating: 8.6
+    budget: 165000000
+    boxOffice: 677463813
+    description: "A team of explorers travel through a wormhole in space."
+    genres: ["Adventure", "Drama", "Sci-Fi"]
+    directorId: "christopher-nolan"
+    actorIds: ["matthew-mcconaughey", "anne-hathaway"]
+  }) {
+    id
+    title
+    released
+  }
+}
+```
+
+## 🗄️ Database Schema
+
+Neo4j graph database structure:
+
+```cypher
+# Nodes
+(:Movie {id, title, released, rating, budget, boxOffice, description})
+(:Actor {id, name})
+(:Director {id, name})
+(:Genre {name})
+(:Award {id, name})
+
+# Relationships
+(:Movie)-[:ACTED_IN]->(:Actor)
+(:Movie)-[:DIRECTED_BY]->(:Director)
+(:Movie)-[:IN_GENRE]->(:Genre)
+(:Movie)-[:WON_AWARD]->(:Award)
+```
+
+## 🧪 Testing
 
 ```bash
-# unit tests
-$ pnpm run test
+# Run unit tests
+npm run test
 
-# e2e tests
-$ pnpm run test:e2e
+# Run tests in watch mode
+npm run test:watch
 
-# test coverage
-$ pnpm run test:cov
+# Generate coverage report
+npm run test:cov
+
+# Run e2e tests
+npm run test:e2e
+
+# Debug tests
+npm run test:debug
 ```
 
-## Deployment
+## 🔧 Development
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Code Quality
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+# Lint code
+npm run lint
+
+# Format code
+npm run format
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Build
 
-## Resources
+```bash
+# Build for production
+npm run build
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Output will be in the `dist/` directory.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🐳 Docker
 
-## Support
+### Build Image
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+docker build -t movie-verse-backend:latest .
+```
 
-## Stay in touch
+### Run Container
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+docker run -d \
+  -p 3000:3000 \
+  -e NEO4J_URI=bolt://neo4j:7687 \
+  -e NEO4J_USER=neo4j \
+  -e NEO4J_PASSWORD=your-password \
+  -e PORT=3000 \
+  --name movie-verse-api \
+  movie-verse-backend:latest
+```
 
-## License
+### Docker Compose
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```yaml
+version: '3.8'
+
+services:
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/your-password
+    volumes:
+      - neo4j_data:/data
+
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=your-password
+      - PORT=3000
+    depends_on:
+      - neo4j
+
+volumes:
+  neo4j_data:
+```
+
+## 📊 Performance
+
+### Optimization Features
+
+- **Graph Database**: Neo4j provides efficient relationship traversals
+- **Connection Pooling**: Reuses database connections
+- **GraphQL**: Clients request only needed data
+- **Schema First**: Auto-generated GraphQL schema
+- **TypeScript**: Type safety and better IDE support
+
+### Resource Requirements
+
+- **CPU**: 500m (0.5 cores) - 1 core
+- **Memory**: 1Gi - 2Gi
+- **Storage**: Depends on data size
+
+## 🔐 Security
+
+- Environment variables for sensitive data
+- No credentials in code
+- GraphQL query complexity limiting (configure as needed)
+- Input validation with class-validator
+- Neo4j parameterized queries (prevents injection)
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Cannot connect to Neo4j:**
+```bash
+# Check Neo4j is running
+docker ps | grep neo4j
+
+# Verify connection string
+echo $NEO4J_URI
+```
+
+**Port already in use:**
+```bash
+# Change port in .env
+PORT=3001
+```
+
+**GraphQL playground not loading:**
+```bash
+# Ensure playground is enabled in app.module.ts
+GraphQLModule.forRoot({
+  playground: true,
+})
+```
+
+## 📝 Scripts Reference
+
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Start in normal mode |
+| `npm run start:dev` | Start with hot-reload |
+| `npm run start:prod` | Start production build |
+| `npm run build` | Build for production |
+| `npm run lint` | Lint code |
+| `npm run format` | Format code |
+| `npm run test` | Run unit tests |
+| `npm run test:e2e` | Run e2e tests |
+
+## 🤝 Contributing
+
+1. Follow NestJS best practices
+2. Write tests for new features
+3. Update documentation
+4. Use conventional commits
+5. Ensure all tests pass
+
+## 📄 License
+
+UNLICENSED
+
+---
+
+**Part of the Movie-Verse project**
